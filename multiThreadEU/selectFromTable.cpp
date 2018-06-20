@@ -439,7 +439,7 @@ enum colwidths {col00 = 16, col01=13, col02=12, col03=16, col04=13, col05=16, co
                 if (ptrbc->numberOfReturnedRows != ptrbc->worthyOfPolynomialFitProcessing) {
                     std::cerr << "For some unknown reason, the numberOfReturnedRows: " << ptrbc->numberOfReturnedRows << " AND values worthyOfPolynomialFitProcessing: " << ptrbc->worthyOfPolynomialFitProcessing << " have different values. " << cases[ptrbc->debugFlags.intMyCase] << std::endl;
                 }
-                SetupForMultiFit  *smf = new SetupForMultiFit(ptrbc, POLYNOMIALDEGREE, ptrbc->worthyOfPolynomialFitProcessing, ptrbc->ptrValues);   /* << =================================== */ //First, establish an instance of the SetupForMultiFit object.
+                SetupForMultiFit  *smf = new SetupForMultiFit(ptrbc, POLYNOMIALDEGREE, ptrbc->worthyOfPolynomialFitProcessing, ptrbc->ptrValues)  ;   /* << =================================== */ //First, establish an instance of the SetupForMultiFit object.
 
                 for  (ptrbc->loopCounter = 0, ptrbc->rowBeingProcessed = 0; ptrbc->loopCounter < ptrbc->worthyOfPolynomialFitProcessing; ++ptrbc->loopCounter, ++ptrbc->rowBeingProcessed)
                 { //Begin loading the gsl matrices and vectors with values.
@@ -486,14 +486,14 @@ Indexes: "tbl_poly_fit_pkey" PRIMARY KEY, btree (id)
                 //doubles are 8 bytes long
                 //floats are 4 bytes long
                 //shorts are 2 bytes long
-                TblPolyFit *const ptrTPF = new TblPolyFit(ptrbc->lookAtMyConnectionString, ptrbc->debugFlags.intMyCase);
+                TblPolyFit *const ptrTPF = new TblPolyFit(ptrbc->lookAtMyConnectionString, ptrbc->debugFlags.intMyCase);  //Make ptrTPF a constant pointer
                 ptrTPF->c0 = smf->getCoefficient(0);
                 ptrTPF->c1 = smf->getCoefficient(1);
                 ptrTPF->c2 = smf->getCoefficient(2);
                 ptrTPF->c3 = smf->getCoefficient(3);
                 ptrTPF->cc = *smf->getCorrelationCoefficient();
                 ptrTPF->chi2 =  *smf->getChi2();
-                ptrTPF->pd = *ptrTPF->ptrPolynomialDegree;
+                ptrTPF->pd = *ptrTPF->ptrPolynomialDegree; //NB: pd is an anonymous union which is "unioned" with polynomialDegree; both are of data type short.
                 ptrTPF->ptrMeterID = &ptrbc->debugFlags.intMyCase;
                 //χ-squared value -----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
                 //Correlation Coefficient ---------------------------------------------------------------------------------------------------------------------------------------+                       |
@@ -510,7 +510,7 @@ Indexes: "tbl_poly_fit_pkey" PRIMARY KEY, btree (id)
                 } else {
                     std::cout << "Successful call to TblPolyFit::doInsertInto, got a return code of 0" <<  std::endl;
                 }
-                delete ptrTPF;
+                if (ptrTPF != nullptr) delete ptrTPF;
 
             } else {
                 std::cerr << "Although the SELECT seems to have worked, we got " << ptrbc->numberOfReturnedRows << " rows back from the table which we thought we just inserted data into!" << cases[ptrbc->debugFlags.intMyCase] << std::endl;
@@ -528,7 +528,7 @@ Indexes: "tbl_poly_fit_pkey" PRIMARY KEY, btree (id)
     if (ptrbc->sql != nullptr) delete [] ptrbc->sql;
     if (ptrbc->copyBuffer != nullptr) delete [] ptrbc->copyBuffer;
     if (ptrbc->subCharBuffer != nullptr) delete [] (ptrbc->subCharBuffer);   //c++'s Equivalent to C's free when we allocate storage with a calloc/malloc. Note the use of [] prior to the (subCharacterBuffer);
-    if (ptrbc->sqlbuffer != nullptr) delete[](ptrbc->sqlbuffer);       //Delete another dynamically acquired character buffer.
+    if (ptrbc->sqlbuffer != nullptr) delete[] (ptrbc->sqlbuffer);       //Delete another dynamically acquired character buffer.
     if (a_ff != nullptr)  {
         a_ff->~Align();
 //        delete a_ff;

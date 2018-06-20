@@ -60,7 +60,7 @@ int insertBucketizedEnergyValuesIntoTable( double avgtemp, \
     PQclear(ptrbc->resI);
     }
     PQfinish(ptrbc->connI);
-    delete [] ptrbc->sqlI;
+    if (ptrbc->sqlI != nullptr) delete [] ptrbc->sqlI;
     return ptrbc->rc[INSERTBUCKETIZEDVALUESINTOTABLE];
 }
 

@@ -22,10 +22,9 @@ SetupForMultiFit::~SetupForMultiFit() {  //Destructor
     gsl_vector_free(this->coefficients);
     gsl_multifit_linear_free(this->work);
     gsl_vector_free(this->computedDependetVariable);
-    
 }
-SetupForMultiFit::SetupForMultiFit(BaseClass *bC, size_t polynomialDegree,  size_t count, double *aOV)   { //Constructor
-    this->bc = bC;
+SetupForMultiFit::SetupForMultiFit(BaseClass *bC, size_t polynomialDegree,  size_t count, double *aOV)  {  //Constructor
+    this->bc = bC; 
     this->ptrChiSquared = &chiSquared;
     this->arrayOfValues = aOV;
     this->polynomialDegree = polynomialDegree;
@@ -44,6 +43,9 @@ SetupForMultiFit::SetupForMultiFit(BaseClass *bC, size_t polynomialDegree,  size
     //    gsl_vector_set_zero(this->coefficients);
     this->work = gsl_multifit_linear_alloc(this->numberOfEntries, this->onePlusPolynomialDegree);
     ptrReturnFromGslCoefficient = &returnFromGslCoefficient; //setup this pointer/pointee relationship.
+}
+SetupForMultiFit::SetupForMultiFit(void) {
+    std::cout << "This SetupForMultiFit constructor does nothing, but does nothing deliberately" << std::endl;
 }
 int    SetupForMultiFit::doMultiFit(void) {
     this->rc = gsl_multifit_wlinear(this->independentVariable, \
@@ -86,7 +88,7 @@ double  SetupForMultiFit::outputCovarianceMatrix(const char *leadOffString, cons
         for (int col = 0; col < this->covarienceMatrix->size2; col++) {
             *this->bc->outstring  << *(this->covarienceMatrix->data + this->covarienceMatrix->size1*row + col);
             if (col < this->covarienceMatrix->size1 - 1) {
-                *this->bc->outstring << ", "; //Output a comma to separate covarient values
+                     *this->bc->outstring << ", "; //Output a comma to separate covarient values
             } else {
                 //Output closed brackets if we've just output the rightmost covarient value for this row.
                 *this->bc->outstring << "]\t " << trailingString << "\n";
