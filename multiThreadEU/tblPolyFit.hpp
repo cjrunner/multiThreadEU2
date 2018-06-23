@@ -38,11 +38,11 @@ private:
     const char *connString = "dbname=LocalWeather port=5436 user=cjc password=apple";  //Connection String goes here.
  //   enum kinds {_m1m2kwh, _m1kwh, _m2kwh};
     // Should look something like: INSERT INTO tbl_poly_fit (lt,pd,coeff,kind,correl,chi2) VALUES(now(), 3, '{51.0091, 1.40023, -0.0656151, 0.000525268}', 'm1kwh', -0.945637, 4.8905);
-    //                                                               OID = FLOAT8OID (701) --------------------------------------+---+
-    //                                                               OID = INT2OID (21) ------------------------------------+    |   |
-    //                                                               OID = FLOAT8OID (701) --------------+---+---+---+      |    |   |
-    //                                                               OID = INT2OID  (21) ----------+     |   |   |   |      |    |   |
-    //                                                                                             V     V   V   V   V      V    V   V
+    //                                                                  OID = FLOAT8OID (701) -----------------------------------+---+
+    //                                                                  OID = INT2OID (21) ---------------------------------+    |   |
+    //                                                                  OID = FLOAT8OID (701) --------------+---+---+---+   |    |   |
+    //                                                                  OID = INT2OID  (21) ----------+     |   |   |   |   |    |   |
+    //                                                                                                V     V   V   V   V   V    V   V
 //  const char *insertINTO = "INSERT INTO tbl_poly_fit (lt,pd,coeff,kind,correl,chi2) VALUES (now(), $1,  {$2, $3, $4, $5},$6,  $7, $8);";
     const char *insertINTO = "INSERT INTO tbl_poly_fit (lt,pd,coeff[1], coeff[2], coeff[3], coeff[4], kind,correl, chi2) VALUES (now(), $1,  $2, $3, $4, $5,  $6, $7, $8);";
     // NB: kind = 0 => m1m2kwh, kind = 1 => m1kwh, kind = 2 => m2kwh
